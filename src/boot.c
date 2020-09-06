@@ -1,8 +1,8 @@
-#include "address_map_arm.h"
+#include "definitions.h"
 
 /* function prototypes */
 void video_text(int, int, char *);
-void video_box(int, int, int, int, short);
+void video_box(int, int, int, int, short, vga_adapter*);
 int  resample_rgb(int, int);
 int  get_data_bits(int);
 
@@ -12,8 +12,8 @@ int  get_data_bits(int);
 /* global variables */
 int screen_x;
 int screen_y;
-int res_offset;
-int col_offset;
+int res_offset = 0;
+int col_offset = 0;
 
 /*******************************************************************************
  * This program demonstrates use of the video in the computer system.
@@ -21,18 +21,11 @@ int col_offset;
  * box
  ******************************************************************************/
 int main(void) {
-    volatile int * video_resolution = (int *)(PIXEL_BUF_CTRL_BASE + 0x8);
-    screen_x                        = *video_resolution & 0xFFFF;
-    screen_y                        = (*video_resolution >> 16) & 0xFFFF;
+    vga_adapter* adapter = vga_adapter_initialize();
 
+    // get color size
     volatile int * rgb_status = (int *)(RGB_RESAMPLER_BASE);
     int            db         = get_data_bits(*rgb_status & 0x3F);
-
-    /* check if resolution is smaller than the standard 320 x 240 */
-    res_offset = (screen_x == 160) ? 1 : 0;
-
-    /* check if number of data bits is less than the standard 16-bits */
-    col_offset = (db == 8) ? 1 : 0;
 
     /* create a message to be displayed on the video and LCD displays */
     char text_top_row[40]    = "Intel FPGA\0";
@@ -41,10 +34,19 @@ int main(void) {
     /* update color */
     short background_color = resample_rgb(db, INTEL_BLUE);
 
-    video_text(35, 29, text_top_row);
-    video_text(32, 30, text_bottom_row);
-    video_box(0, 0, STANDARD_X, STANDARD_Y, 0); // clear the screen
-    video_box(31 * 4, 28 * 4, 49 * 4 - 1, 32 * 4 - 1, background_color);
+    int y = 0;
+    while (1)
+    {
+        //video_text(35, 29, text_top_row);
+        //video_text(32, 30, text_bottom_row);
+        video_box(0, 0, STANDARD_X, STANDARD_Y, 0, adapter); // clear the screen
+        video_box(0, y, 100, y+100, background_color, adapter);
+
+        if (y > 250) y = 0;
+        y++;
+
+        vga_adapter_wait_for_vsync(adapter);
+    }
 
     return 0;
 }
@@ -72,8 +74,11 @@ void video_text(int x, int y, char * text_ptr) {
  * Takes in points assuming 320x240 resolution and adjusts based on differences
  * in resolution and color bits.
  ******************************************************************************/
-void video_box(int x1, int y1, int x2, int y2, short pixel_color) {
-    int pixel_buf_ptr = *(int *)PIXEL_BUF_CTRL_BASE;
+void video_box(int x1, int y1, int x2, int y2, short pixel_color, vga_adapter* adapter) {
+    // PIXEL_BUF_CTRL_BASE
+    //int pixel_buf_ptr = *(int *)(PIXEL_BUF_CTRL_BASE); // adapter->front_buffer_address;
+    int pixel_buf_ptr = adapter->back_buffer_address;
+
     int pixel_ptr, row, col;
     int x_factor = 0x1 << (res_offset + col_offset);
     int y_factor = 0x1 << (res_offset);
