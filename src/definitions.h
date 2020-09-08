@@ -18,7 +18,17 @@ typedef unsigned int uint32_t;
    typedef unsigned long long int uint64_t;
 #endif
 
-#include "address_map_arm.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "misc/address_map_arm.h"
 
 #include "video/vga.h"
+#include "video/color.h"
+#include "video/draw.h"
+
+#include "misc/assert.h"
+
 #include "video/vga.c"
+#include "video/color.c"
+#include "video/draw.c"

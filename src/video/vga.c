@@ -1,14 +1,25 @@
 
 vga_adapter* vga_adapter_initialize() {
    vga_adapter* adapter = (vga_adapter*)PIXEL_BUF_CTRL_BASE;
-   adapter->back_buffer_address = (int*)0xC0000000;
+   adapter->back_buffer_address = (int32_t*)0x00000000;
+
+   _default_vga_adapter = adapter;
 
    return adapter;
 }
 
+vga_adapter* vga_adapter_get_default()
+{
+   if (!_default_vga_adapter) {
+      vga_adapter_initialize();
+   }
+
+   return _default_vga_adapter;
+}
+
 void vga_adapter_wait_for_vsync(vga_adapter* adapter)
 {
-   adapter->front_buffer_address = 1;
+   adapter->front_buffer_address = (int32_t*)1;
 
    while(1)
    {
