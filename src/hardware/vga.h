@@ -1,5 +1,7 @@
-#ifndef INCLUDE_VIDEO_VIDEO_H
-#define INCLUDE_VIDEO_VIDEO_H
+#ifndef INCLUDE_HARDWARE_VGA_H
+#define INCLUDE_HARDWARE_VGA_H
+
+// Character buffer is 80x60
 
 typedef struct t_vga_adapter
 {

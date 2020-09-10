@@ -23,12 +23,19 @@ typedef unsigned int uint32_t;
 
 #include "misc/address_map_arm.h"
 
-#include "video/vga.h"
+#include "misc/string.h"
+#include "allocator.h"
+#include "hardware/vga.h"
+#include "hardware/interrupts.h"
 #include "video/color.h"
 #include "video/draw.h"
+#include "console.h"
 
 #include "misc/assert.h"
-
-#include "video/vga.c"
+#include "misc/string.c"
+#include "allocator.c"
+#include "hardware/vga.c"
+#include "hardware/interrupts.c"
 #include "video/color.c"
 #include "video/draw.c"
+#include "console.c"

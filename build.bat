@@ -29,6 +29,6 @@ IF %errorlevel% == 1 (
 %quartus_tools%quartus_pgm --quiet -c "DE-SoC [USB-1]" --auto >nul 2>nul
 %quartus_tools%quartus_pgm --quiet -c "DE-SoC [USB-1]" -m jtag -o P;%install_dir%University_Program/Computer_Systems/DE1-SoC/DE1-SoC_Computer/verilog/DE1_SoC_Computer.sof@2 >nul 2>nul
 
-start "" %bin_tools%arm-altera-eabi-gdb -ex "target remote localhost:3128"  -symbols bin/os.axf
+start "" %bin_tools%arm-altera-eabi-gdb -ex "target remote localhost:3128" -ex "continue" -symbols bin/os.axf
 
 %quartus_tools%quartus_hps --cable="DE-SoC [USB-1]" -o GDBSERVER --gdbport0=3128 --preloader=%arm_tools%u-boot-spl.de1-soc.srec --preloaderaddr=0xffff13a0 --source=bin/os.srec >nul 2>nul

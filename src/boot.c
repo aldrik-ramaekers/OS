@@ -21,12 +21,10 @@ int col_offset = 0;
  * box
  ******************************************************************************/
 int main(void) {
-
-    color_initialize();
+    interrupts_initialize();
     vga_adapter* adapter = vga_adapter_initialize();
 
-    // clear screen
-    draw_rectangle(adapter, 0, 0, adapter->screen_width, adapter->screen_height, color_rgb(0,0,0));
+    console_report_message("Welcome to coolsville...");
 
     int32_t y = 0;
     int32_t x = 0;
@@ -41,12 +39,14 @@ int main(void) {
 
         draw_rectangle(adapter, x, y, 50, 50, color_rgb(255, 0, y));
 
-        draw_text(adapter, 2, 2, "BAZINGA!\0");
+        //draw_text(adapter, 2, 2, "BAZINGA!\0");
 
         if (x >= adapter->screen_width-50) xd = -xd;
         if (y >= adapter->screen_height-50) yd = -yd;
         if (x <= 0) xd = -xd;
         if (y <= 0) yd = -yd;
+
+        console_draw();
 
         vga_adapter_wait_for_vsync(adapter);
     }
