@@ -1,3 +1,5 @@
+#include "font8x8_basic.h"
+
 void draw_pixel(vga_adapter* adapter, int32_t x, int32_t y, int32_t color)
 {
    int32_t pixel_buf_ptr = (int32_t)adapter->back_buffer_address;
@@ -44,15 +46,36 @@ void draw_rectangle(vga_adapter* adapter, int32_t x, int32_t y, int32_t w, int32
    }
 }
 
+ __attribute__((flatten))
 void draw_text(vga_adapter* adapter, int32_t x, int32_t y, char* text)
 {
-   int32_t offset;
-   volatile char* character_buffer = (char *)FPGA_CHAR_BASE;
+   x*=8;
+   y*=8;
 
-   offset = (y << 7) + x;
+   int32_t initial_x = x;
+
+   int32_t offset = 0;
    while (*(text)) {
-      *(character_buffer + offset) = *(text); 
+      char* c = font8x8_basic[(uint8_t)(*text)];
+
+      if (x + offset > adapter->screen_width) {
+         x = initial_x;
+         y += 8;
+      }
+
+      for (int8_t yy = 0; yy < 8; yy++) {
+         for (int8_t xx = 0; xx < 8; xx++) {
+            if ((c[yy] >> xx) & 0x1)
+               draw_pixel(adapter, x+xx + offset, y+yy, 0xFFFFFFFF);
+         }
+      }
+      
+      offset += 8;
       ++text;
-      ++offset;
-    }
+   }
+   
+}
+
+void draw_clear_screen(vga_adapter* adapter) {
+   draw_rectangle(adapter, 0, 0, adapter->screen_width, adapter->screen_height, color_rgb(0,0,0));
 }

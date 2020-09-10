@@ -31,6 +31,6 @@ void console_draw()
 
    for (int i = offset; i < _default_console.history_count; i++)
    {
-      draw_text(vga_adapter_get_default(), 0, i+1, _default_console.history[i]);
+      draw_text(vga_adapter_get_default(), 0, i - offset, _default_console.history[i]);
    }
 }

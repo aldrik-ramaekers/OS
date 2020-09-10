@@ -3,7 +3,7 @@ vga_adapter* vga_adapter_initialize() {
    color_initialize();
 
    vga_adapter* adapter = (vga_adapter*)PIXEL_BUF_CTRL_BASE;
-   adapter->back_buffer_address = (int32_t*)mem_alloc(0x3FFFF);
+   adapter->back_buffer_address = (int32_t*)0xC0000000; //(int32_t*)mem_alloc(0x3FFFF);
 
    _default_vga_adapter = adapter;
 

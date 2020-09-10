@@ -33,14 +33,12 @@ int main(void) {
     uint8_t p = 0;
     while (1)
     {
-        draw_rectangle(adapter, x, y, 50, 50, color_rgb(0,0,0));
+        draw_rectangle(adapter, x, y, 50, 50, color_rgb(0, 0, 0));
 
         x += xd;
         y += yd;
 
         draw_rectangle(adapter, x, y, 50, 50, color_rgb(255, p, y));
-
-        //draw_text(adapter, 2, 2, "BAZINGA!\0");
 
         if (x >= adapter->screen_width-50) xd = -xd;
         if (y >= adapter->screen_height-50) yd = -yd;
@@ -49,8 +47,9 @@ int main(void) {
 
         if (pushbutton_is_pressed(0)) {
             p += 10;
+            console_report_message("Button pressed!");
         }
-
+            
         console_draw();
 
         vga_adapter_wait_for_vsync(adapter);
