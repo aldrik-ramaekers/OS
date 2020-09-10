@@ -5,7 +5,7 @@ set bin_tools=%install_dir%University_Program\Monitor_Program\arm_tools\baremeta
 set quartus_tools=%install_dir%quartus\bin64\
 set arm_tools=%install_dir%University_Program\Monitor_Program\arm_tools\
 
-%bin_tools%arm-altera-eabi-gcc -Wall -c -std=c99 -g -mfloat-abi=soft -march=armv7-a -mtune=cortex-a9 -mcpu=cortex-a9 src/boot.c -o bin/os.c.o
+%bin_tools%arm-altera-eabi-gcc -Wall -c -std=gnu99 -g -mfloat-abi=soft -march=armv7-a -mtune=cortex-a9 -mcpu=cortex-a9 src/boot.c -o bin/os.c.o
 
 IF %errorlevel% == 1 (
    exit

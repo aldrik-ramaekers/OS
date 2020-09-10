@@ -30,6 +30,7 @@ int main(void) {
     int32_t x = 0;
     int xd = 1;
     int yd = 1;
+    uint8_t p = 0;
     while (1)
     {
         draw_rectangle(adapter, x, y, 50, 50, color_rgb(0,0,0));
@@ -37,7 +38,7 @@ int main(void) {
         x += xd;
         y += yd;
 
-        draw_rectangle(adapter, x, y, 50, 50, color_rgb(255, 0, y));
+        draw_rectangle(adapter, x, y, 50, 50, color_rgb(255, p, y));
 
         //draw_text(adapter, 2, 2, "BAZINGA!\0");
 
@@ -45,6 +46,10 @@ int main(void) {
         if (y >= adapter->screen_height-50) yd = -yd;
         if (x <= 0) xd = -xd;
         if (y <= 0) yd = -yd;
+
+        if (pushbutton_is_pressed(0)) {
+            p += 10;
+        }
 
         console_draw();
 
