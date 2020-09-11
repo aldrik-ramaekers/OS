@@ -19,22 +19,29 @@ int main(void) {
             if (active_software && !switch_is_on(software_get_index(active_software))) {
                 active_software->destroy();
                 active_software = 0;
+
+                draw_clear_screen(adapter);
             }
 
             if (switch_is_on(i) && !active_software) {
                 if (active_software) active_software->destroy();
+
+                draw_clear_screen(adapter);
 
                 active_software = software_at(i);
                 active_software->initialize();
             }
         }
 
+        // Either draw active software or console
         if (active_software) {
             active_software->update();
             active_software->draw();
         }
-            
-        console_draw();
+        else { 
+            console_draw();
+        }
+
         vga_adapter_wait_for_vsync(adapter);
     }
 

@@ -30,6 +30,9 @@ void draw_rectangle(vga_adapter* adapter, int32_t x, int32_t y, int32_t w, int32
       y = 0;
    }
 
+   if (y > adapter->screen_height) return;
+   if (x > adapter->screen_width) return;
+
    if (w <= 0) return;
    if (h <= 0) return;
 
@@ -38,9 +41,11 @@ void draw_rectangle(vga_adapter* adapter, int32_t x, int32_t y, int32_t w, int32
 
    for (int32_t row = y; row < y+h; row++)
    {
+      int32_t yy = (row<<10);
+
       for (int32_t col = x; col < x+w; col++)
       {
-         int32_t pixel_ptr = pixel_buf_ptr + (row<<10) + (col<<1);
+         int32_t pixel_ptr = pixel_buf_ptr + yy + (col<<1);
          *(int16_t*)pixel_ptr = color;
       }
    }
@@ -61,6 +66,8 @@ void draw_text(vga_adapter* adapter, int32_t x, int32_t y, char* text)
          offset = 0;
       }
 
+      // @speed: stop using draw_pixel
+
       for (int8_t yy = 0; yy < 8; yy++) {
          for (int8_t xx = 0; xx < 8; xx++) {
             if ((c[yy] >> xx) & 0x1)
@@ -75,5 +82,5 @@ void draw_text(vga_adapter* adapter, int32_t x, int32_t y, char* text)
 }
 
 void draw_clear_screen(vga_adapter* adapter) {
-   draw_rectangle(adapter, 0, 0, adapter->screen_width, adapter->screen_height, color_rgb(0,0,0));
+   memset(adapter->back_buffer_address, 0, 0x3FFFF);
 }

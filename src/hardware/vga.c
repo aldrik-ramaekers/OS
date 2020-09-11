@@ -30,4 +30,7 @@ void vga_adapter_wait_for_vsync(vga_adapter* adapter)
       volatile int8_t did_swap = adapter->status & 0x1;
       if (did_swap == 0) break;
    }
+
+   // Clear backbuffer for new image
+   draw_clear_screen(adapter);
 }
