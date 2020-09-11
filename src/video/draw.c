@@ -52,15 +52,13 @@ void draw_text(vga_adapter* adapter, int32_t x, int32_t y, char* text)
    x*=8;
    y*=8;
 
-   int32_t initial_x = x;
-
    int32_t offset = 0;
    while (*(text)) {
       char* c = font8x8_basic[(uint8_t)(*text)];
 
       if (x + offset > adapter->screen_width) {
-         x = initial_x;
          y += 8;
+         offset = 0;
       }
 
       for (int8_t yy = 0; yy < 8; yy++) {

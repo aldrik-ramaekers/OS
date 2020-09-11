@@ -23,11 +23,15 @@ typedef unsigned int uint32_t;
 
 #include "misc/address_map_arm.h"
 
+// System
+#include "software/interface/software_interface.h"
+#include "software/software_registry.h"
 #include "misc/string.h"
 #include "allocator.h"
 #include "hardware/vga.h"
 #include "hardware/interrupts.h"
 #include "hardware/pushbutton.h"
+#include "hardware/switch.h"
 #include "video/color.h"
 #include "video/draw.h"
 #include "console.h"
@@ -38,6 +42,12 @@ typedef unsigned int uint32_t;
 #include "hardware/vga.c"
 #include "hardware/interrupts.c"
 #include "hardware/pushbutton.c"
+#include "hardware/switch.c"
 #include "video/color.c"
 #include "video/draw.c"
 #include "console.c"
+
+// Software
+#include "software/pong.c"
+
+#include "software/software_registry.c"

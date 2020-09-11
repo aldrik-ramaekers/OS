@@ -1,57 +1,40 @@
 #include "definitions.h"
 
-/* function prototypes */
-void video_text(int, int, char *);
-void video_box(int, int, int, int, short, vga_adapter*);
-int  resample_rgb(int, int);
-int  get_data_bits(int);
-
 #define STANDARD_X 320
 #define STANDARD_Y 240
 
-/* global variables */
-int screen_x;
-int screen_y;
-int res_offset = 0;
-int col_offset = 0;
+software_interface * active_software = 0;
 
-/*******************************************************************************
- * This program demonstrates use of the video in the computer system.
- * Draws a blue box on the video display, and places a text string inside the
- * box
- ******************************************************************************/
 int main(void) {
     interrupts_initialize();
     vga_adapter* adapter = vga_adapter_initialize();
+    software_initialize();
 
     console_report_message("Welcome to coolsville...");
 
-    int32_t y = 0;
-    int32_t x = 0;
-    int xd = 1;
-    int yd = 1;
-    uint8_t p = 0;
     while (1)
     {
-        draw_rectangle(adapter, x, y, 50, 50, color_rgb(0, 0, 0));
+        // Switch between software using switches
+        for (int32_t i = 0; i < software_count(); i++) {
+            if (active_software && !switch_is_on(software_get_index(active_software))) {
+                active_software->destroy();
+                active_software = 0;
+            }
 
-        x += xd;
-        y += yd;
+            if (switch_is_on(i) && !active_software) {
+                if (active_software) active_software->destroy();
 
-        draw_rectangle(adapter, x, y, 50, 50, color_rgb(255, p, y));
+                active_software = software_at(i);
+                active_software->initialize();
+            }
+        }
 
-        if (x >= adapter->screen_width-50) xd = -xd;
-        if (y >= adapter->screen_height-50) yd = -yd;
-        if (x <= 0) xd = -xd;
-        if (y <= 0) yd = -yd;
-
-        if (pushbutton_is_pressed(0)) {
-            p += 10;
-            console_report_message("Button pressed!");
+        if (active_software) {
+            active_software->update();
+            active_software->draw();
         }
             
         console_draw();
-
         vga_adapter_wait_for_vsync(adapter);
     }
 
