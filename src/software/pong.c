@@ -38,6 +38,9 @@ static void _pong_reset_ball() {
 static void pong_initialize() {
    _pong_reset_ball();
    _pong_reset_players();
+
+   seg_display_set_value(0, 0);
+   seg_display_set_value(0, 5);
 }
 
 static void pong_update() {
@@ -72,11 +75,21 @@ static void pong_update() {
       p2.score++;
       _pong_reset_ball();
       _pong_reset_players();
+
+      int8_t ls = p2.score % 10;
+      int8_t ms = p2.score / 10;
+      seg_display_set_value(ls, 4);
+      seg_display_set_value(ms, 5);
    }
    else if (ball.x + PONG_BALL_SIZE > adapter->screen_width - PONG_PLAYER_WIDTH - 5) {
       p1.score++;
       _pong_reset_ball();
       _pong_reset_players();
+
+      int8_t ls = p1.score % 10;
+      int8_t ms = p1.score / 10;
+      seg_display_set_value(ls, 0);
+      seg_display_set_value(ms, 1);
    }
 
    if (p1.y < 0) p1.y = 0;
