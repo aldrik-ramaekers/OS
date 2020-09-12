@@ -39,7 +39,13 @@ static void pong_initialize() {
    _pong_reset_ball();
    _pong_reset_players();
 
+   for (int32_t i = 0; i < 6; i++) {
+      seg_display_set_value(-1, i);
+   }
+
    seg_display_set_value(0, 0);
+   seg_display_set_value(0, 1);
+   seg_display_set_value(0, 4);
    seg_display_set_value(0, 5);
 }
 
@@ -61,7 +67,7 @@ static void pong_update() {
 
    vga_adapter *adapter = vga_adapter_get_default();
 
-   if (ball.y == 0 || ball.y + PONG_BALL_SIZE == adapter->screen_height) {
+   if (ball.y == SOFTWARE_DRAW_Y_START || ball.y + PONG_BALL_SIZE == adapter->screen_height) {
       ball.dir_y = -ball.dir_y;
    }
 
@@ -92,9 +98,9 @@ static void pong_update() {
       seg_display_set_value(ms, 1);
    }
 
-   if (p1.y < 0) p1.y = 0;
+   if (p1.y < SOFTWARE_DRAW_Y_START) p1.y = SOFTWARE_DRAW_Y_START;
    if (p1.y + PONG_PLAYER_HEIGHT > adapter->screen_height) p1.y = adapter->screen_height - PONG_PLAYER_HEIGHT;
-   if (p2.y < 0) p2.y = 0;
+   if (p2.y < SOFTWARE_DRAW_Y_START) p2.y = SOFTWARE_DRAW_Y_START;
    if (p2.y + PONG_PLAYER_HEIGHT > adapter->screen_height) p2.y = adapter->screen_height - PONG_PLAYER_HEIGHT;
 }
 
@@ -102,15 +108,17 @@ static void pong_draw() {
    vga_adapter *adapter = vga_adapter_get_default();
 
    // draw players
-   draw_rectangle(adapter, 5, p1.y, PONG_PLAYER_WIDTH, PONG_PLAYER_HEIGHT, 0xFFFFFFFF);
-   draw_rectangle(adapter, adapter->screen_width - PONG_PLAYER_WIDTH - 5, p2.y, PONG_PLAYER_WIDTH, PONG_PLAYER_HEIGHT, 0xFFFFFFFF);
+   draw_rectangle(5, p1.y, PONG_PLAYER_WIDTH, PONG_PLAYER_HEIGHT, color_rgb(255,255,255));
+   draw_rectangle(adapter->screen_width - PONG_PLAYER_WIDTH - 5, p2.y, PONG_PLAYER_WIDTH, PONG_PLAYER_HEIGHT, color_rgb(255,255,255));
 
    // draw ball
-   draw_rectangle(adapter, ball.x, ball.y, PONG_BALL_SIZE, PONG_BALL_SIZE, 0xFFFFFFFF);
+   draw_rectangle(ball.x, ball.y, PONG_BALL_SIZE, PONG_BALL_SIZE, color_rgb(255,255,255));
 }
 
 static void pong_destroy() {
-
+   for (int32_t i = 0; i < 6; i++) {
+      seg_display_set_value(-1, i);
+   }
 }
 
 #undef PONG_PLAYER_HEIGHT

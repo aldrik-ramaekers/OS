@@ -8,7 +8,7 @@ void assert_failed(char* file, int32_t line)
    snprintf(buffer, 1024, "Assertion failed at // %s:%d", file, line);
 
    draw_clear_screen(adapter);
-   draw_text(adapter, 0, 1, buffer);
+   draw_text(0, 1, buffer);
    vga_adapter_wait_for_vsync(adapter);
 
    while(1);

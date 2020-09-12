@@ -18,9 +18,14 @@ typedef unsigned int uint32_t;
    typedef unsigned long long int uint64_t;
 #endif
 
+#define bool uint8_t
+#define true 1
+#define false 0
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "misc/address_map_arm.h"
 
@@ -49,6 +54,9 @@ typedef unsigned int uint32_t;
 #include "video/color.c"
 #include "video/draw.c"
 #include "console.c"
+
+// System software
+#include "software/info_bar.c"
 
 // Software
 #include "software/pong.c"

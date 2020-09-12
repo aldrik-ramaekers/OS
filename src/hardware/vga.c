@@ -7,7 +7,7 @@ vga_adapter* vga_adapter_initialize() {
    
    _default_vga_adapter = adapter;
 
-   draw_rectangle(adapter, 0, 0, adapter->screen_width, adapter->screen_height, color_rgb(0,0,0));
+   draw_rectangle(0, 0, adapter->screen_width, adapter->screen_height, color_rgb(0,0,0));
 
    return adapter;
 }

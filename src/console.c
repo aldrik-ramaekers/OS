@@ -22,15 +22,16 @@ void console_report_message(char *message)
 
 void console_draw()
 {
-   int offset = 0;
+   int32_t offset = 0;
+   int32_t max_lines = (vga_adapter_get_default()->screen_height - SOFTWARE_DRAW_Y_START) / 8;
 
-   if (_default_console.history_count >= 60)
+   if (_default_console.history_count >= max_lines)
    {
-      offset = _default_console.history_count - 60;
+      offset = _default_console.history_count - max_lines;
    }
 
    for (int i = offset; i < _default_console.history_count; i++)
    {
-      draw_text(vga_adapter_get_default(), 0, i - offset, _default_console.history[i]);
+      draw_text(0, SOFTWARE_DRAW_Y_START + (i - offset) * 8, _default_console.history[i]);
    }
 }

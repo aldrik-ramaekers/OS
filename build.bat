@@ -23,6 +23,10 @@ IF %errorlevel% == 1 (
    exit
 )
 
+if "%1"=="-b" (
+   exit
+)
+
 %bin_tools%arm-altera-eabi-nm -p bin/os.axf >nul 2>nul
 %bin_tools%arm-altera-eabi-objdump -d -S "-M reg-names-std" bin/os.axf >nul 2>nul
 
